@@ -1,1 +1,55 @@
 @import "tailwindcss";
+
+@theme {
+  /* --- CATPPUCCIN MOCHA --- */
+  /* Wallpaper: Crust (Darkest) */
+  --color-mocha-wall: #11111b;
+  /* Terminal: Base */
+  --color-mocha-term: #1e1e2e;
+  /* Text: Text (White-ish) */
+  --color-mocha-text: #cdd6f4;
+  /* Accent: Blue */
+  --color-mocha-accent: #89b4fa;
+  /* Secondary Accent: Pink (Optional, good for '~') */
+  --color-mocha-pink: #f5c2e7;
+
+  /* --- TOKYO NIGHT --- */
+  /* Wallpaper: Darker than night */
+  --color-tokyo-wall: #16161e;
+  /* Terminal: Night Background */
+  --color-tokyo-term: #1a1b26;
+  /* Text: Foreground */
+  --color-tokyo-text: #c0caf5;
+  /* Accent: The classic Tokyo Blue */
+  --color-tokyo-accent: #7aa2f7;
+  /* Secondary Accent: Purple (Optional) */
+  --color-tokyo-pink: #bb9af7;
+
+  /* --- TIKKA TERM --- */
+  /* Wallpaper: Darker than night */
+  --color-tikka-wall: #1a1b26;
+  /* Terminal: Night Background */
+  --color-tikka-term: #171719;
+  /* Text: Foreground */
+  --color-tikka-text: #ffffff;
+  /* Accent: The classic Tokyo Blue */
+  --color-tikka-accent: #0062ff;
+  /* Secondary Accent: Purple (Optional) */
+  --color-tikka-pink: #ff5555;
+
+  /* --- TAILWIND WEBSITE THEME (Slate) --- */
+  /* Wallpaper: The deep background of the website (Slate 950) */
+  --color-tailwind-wall: #c0caf5;
+
+  /* Terminal: The color of their code blocks (Slate 900) */
+  --color-tailwind-term: #1e1e2e;
+
+  /* Text: Soft white for readability (Slate 200) */
+  --color-tailwind-text: #cdd6f4;
+
+  /* Accent: The iconic "Sky Blue" logo color (Sky 400) */
+  --color-tailwind-accent: #7aa2f7;
+
+  /* Secondary Accent: The pink they use for highlighting (Pink 400) */
+  --color-tailwind-pink: #f472b6;
+}
