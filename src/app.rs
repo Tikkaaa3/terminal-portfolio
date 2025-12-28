@@ -1,10 +1,10 @@
+use crate::terminal::Terminal;
 use leptos::prelude::*;
 use leptos_meta::{provide_meta_context, MetaTags, Stylesheet, Title};
 use leptos_router::{
     components::{Route, Router, Routes},
     StaticSegment,
 };
-use crate::terminal::Terminal;
 
 pub fn shell(options: LeptosOptions) -> impl IntoView {
     view! {
@@ -35,7 +35,7 @@ pub fn App() -> impl IntoView {
         <Stylesheet id="leptos" href="/pkg/terminal-portfolio.css"/>
 
         // sets the document title
-        <Title text="Welcome to Leptos"/>
+        <Title text="tikka"/>
 
         // content for this welcome page
         <Router>

@@ -7,7 +7,9 @@ use wasm_bindgen::prelude::*;
 #[cfg(target_arch = "wasm32")]
 use wasm_bindgen::JsCast;
 
-//TODO: write more detailed information about yourself change the half mock data.
+//TODO: add flexibility for phones, tablets etc.
+//TODO: add scrollbar color
+//FIX: change the app icon
 
 #[component]
 pub fn Terminal() -> impl IntoView {
@@ -17,6 +19,11 @@ pub fn Terminal() -> impl IntoView {
     let linkedin_link: NodeRef<html::A> = NodeRef::new();
     let mail_link: NodeRef<html::A> = NodeRef::new();
     let cv_link: NodeRef<html::A> = NodeRef::new();
+
+    let dotfiles_link: NodeRef<html::A> = NodeRef::new();
+    let catt_link: NodeRef<html::A> = NodeRef::new();
+    let house_backend_link: NodeRef<html::A> = NodeRef::new();
+    let terminal_ed_link: NodeRef<html::A> = NodeRef::new();
 
     // 2. STATE: Simple buffer for keys
     let (buffer, set_buffer) = signal("".to_string());
@@ -53,8 +60,8 @@ pub fn Terminal() -> impl IntoView {
             // SIMPLIFIED BUFFER LOGIC
             set_buffer.update(|b| {
                 b.push_str(&key);
-                // Keep only the last 3 keys (we only care about "gg", "gh", etc.)
-                if b.len() > 3 {
+                // Keep only the last 2 keys (we only care about "ln", "gh", etc.)
+                if b.len() > 2 {
                     *b = b.chars().skip(1).collect();
                 }
             });
@@ -62,24 +69,44 @@ pub fn Terminal() -> impl IntoView {
             let cmd = buffer.get(); // e.g., "gh"
 
             // 3. ACTION: Check buffer -> Click existing link
-            if cmd.ends_with("ggh") {
+            if cmd.ends_with("gh") {
                 // "Go Github": Rust clicks the link for you!
                 if let Some(a) = github_link.get() {
                     a.click();
                 }
                 set_buffer.set("".to_string());
-            } else if cmd.ends_with("gln") {
+            } else if cmd.ends_with("ln") {
                 if let Some(a) = linkedin_link.get() {
                     a.click();
                 }
                 set_buffer.set("".to_string());
-            } else if cmd.ends_with("gm") {
+            } else if cmd.ends_with("em") {
                 if let Some(a) = mail_link.get() {
                     a.click();
                 }
                 set_buffer.set("".to_string());
-            } else if cmd.ends_with("dcv") {
+            } else if cmd.ends_with("cv") {
                 if let Some(a) = cv_link.get() {
+                    a.click();
+                }
+                set_buffer.set("".to_string());
+            } else if cmd.ends_with("p1") {
+                if let Some(a) = dotfiles_link.get() {
+                    a.click();
+                }
+                set_buffer.set("".to_string());
+            } else if cmd.ends_with("p2") {
+                if let Some(a) = catt_link.get() {
+                    a.click();
+                }
+                set_buffer.set("".to_string());
+            } else if cmd.ends_with("p3") {
+                if let Some(a) = house_backend_link.get() {
+                    a.click();
+                }
+                set_buffer.set("".to_string());
+            } else if cmd.ends_with("p4") {
+                if let Some(a) = terminal_ed_link.get() {
                     a.click();
                 }
                 set_buffer.set("".to_string());
@@ -121,7 +148,7 @@ pub fn Terminal() -> impl IntoView {
                 // --- BLOCK 1: NEOFETCH ---
                 <div class="mb-8">
                     <div class="pb-2">
-                        <span class="text-tailwind-accent">"tailwind@Portfolio "</span>
+                        <span class="text-tailwind-accent">"tikka@Portfolio "</span>
                         <span class="text-tailwind-pink">"~ "</span>
                         <span class="text-tailwind-accent">"$ "</span>
                         <span class="text-tailwind-pink">"fastfetch"</span>
@@ -154,21 +181,20 @@ pub fn Terminal() -> impl IntoView {
                                 </span>
                                 <span class="text-white">
                                     <pre>
-    {r#"tailwind@PhoneMicrowave
+    {r#"tikka@PhoneMicrowave
 --------------------
-User: Emre Tolga Kaptan
+About: Emre Tolga Kaptan
+Location: Wroclaw, Poland
 OS: Arch (btw)
 Host: Leptos/Axum (SSR)
-Kernel: Linux 6.18.2-arch2-1
-Uptime: 4 hours, 31 mins
-Packages: 808 (pacman)
-Shell: bash
+Shell: Bash
 WM: Hyprland (Wayland)
-Terminal: ghostty
-Editor: neovim
-Terminal multiplexer: zellij
-Fav Langs: rust, go
-Fav Animal: cat"#}
+Terminal: Ghostty
+Editor: Neovim
+Tmux: Zellij (no pun intended)
+Cloud: Docker, AWS, Azure
+Stack: Rust, Go, TypeScript, Node.js, React
+Cats: Love them!"#}
                                     </pre>
                                 </span>
                             </div>
@@ -177,7 +203,7 @@ Fav Animal: cat"#}
                         // --- BLOCK 2: BAT ME.MD ---
                         <div class="mb-8">
                             <div class="pb-2">
-                                <span class="text-tailwind-accent">"tailwind@Portfolio "</span>
+                                <span class="text-tailwind-accent">"tikka@Portfolio "</span>
                                 <span class="text-tailwind-pink">"~ "</span>
                                 <span class="text-tailwind-accent">"$ "</span>
                                 <span class="text-tailwind-pink">"bat me.md"</span>
@@ -207,26 +233,61 @@ Fav Animal: cat"#}
 
                                 // Content
                                 <span class="text-tailwind-text whitespace-pre-wrap">
-                                    "Hi I'm Emre; living in Wroclaw, Poland.\n"
+                                    "Hi, I'm Emre. Software Engineering student in Wroclaw, PL.\n"
                                     "This website is written in rust, leptos. (bc why not?)\n\n"
-                                    "I am a Full-stack web developer leaning towards backend.\n"
+                                    "I am a Full-stack web developer focused on backend.\n"
                                     "I mostly use go, node-express for backend and react for frontend.\n"
-                                    "I am interested in Distributed Systems and Cloud Native tech.\n\n"
+                                    "I live in the terminal. I love building things that work smoothly under the hood whether that's APIs, DB structures, or CLI tools. My focus is always on understanding system internals and optimizing performance.\n\n"
                                     "Here are my socials:\n"
-                                    "  - " <a node_ref=github_link href="https://github.com/Tikkaaa3" target="_blank" class="text-tailwind-accent hover:underline">"github (ggh)"</a> "\n"
-                                    "  - " <a node_ref=linkedin_link href="https://www.linkedin.com/in/emre-t-kaptan/" target="_blank" class="text-tailwind-accent hover:underline">"linkedin (gln)"</a> "\n"
-                                    "  - " <a node_ref=mail_link href="mailto:tikkaaa3@gmail.com" class="text-tailwind-accent hover:underline">"e-mail (gm)"</a> "\n"
-                                    "  - " <a node_ref=cv_link href="../public/cv.pdf" download="cv.pdf" class="text-tailwind-accent hover:underline">"cv (dcv)"</a>
+                                    "  - " <a node_ref=github_link href="https://github.com/Tikkaaa3" target="_blank" class="text-tailwind-accent hover:underline">"github (gh)"</a> "\n"
+                                    "  - " <a node_ref=linkedin_link href="https://www.linkedin.com/in/emre-t-kaptan/" target="_blank" class="text-tailwind-accent hover:underline">"linkedin (ln)"</a> "\n"
+                                    "  - " <a node_ref=mail_link href="mailto:tikkaaa3@gmail.com" class="text-tailwind-accent hover:underline">"e-mail (em)"</a> "\n"
+                                    "  - " <a node_ref=cv_link href="../public/cv.pdf" download="cv.pdf" class="text-tailwind-accent hover:underline">"cv (cv)"</a>
                                 </span>
                             </div>
                         </div>
 
-                        // --- BLOCK 3: ACTIVE PROMPT (Blinking Cursor) ---
+                        // --- BLOCK 3: BAT PROJECTS.MD ---
+                        <div class="mb-8">
+                            <div class="pb-2">
+                                <span class="text-tailwind-accent">"tikka@Portfolio "</span>
+                                <span class="text-tailwind-pink">"~ "</span>
+                                <span class="text-tailwind-accent">"$ "</span>
+                                <span class="text-tailwind-pink">"bat projects.md"</span>
+                            </div>
+
+                            <div class="flex flex-row items-start gap-4">
+                                // Line Numbers (Darker, non-selectable)
+                                <span class="text-tailwind-pink select-none text-right border-r border-gray-800 pr-4">
+                                    <pre>
+    {r#" 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+"#}
+                                    </pre>
+                                </span>
+
+                                // Content
+                                <span class="text-tailwind-text whitespace-pre-wrap">
+                                    "My projects:\n"
+                                    "  * " <a node_ref=dotfiles_link href="https://github.com/Tikkaaa3/dotfiles" target="_blank" class="text-tailwind-accent hover:underline">"Dotfiles (p1)"</a> "\n"
+                                    "  * " <a node_ref=catt_link href="https://github.com/Tikkaaa3/catt" target="_blank" class="text-tailwind-accent hover:underline">"Catt (p2)"</a> "\n"
+                                    "  * " <a node_ref=house_backend_link href="https://github.com/Tikkaaa3/HouseAppBackend" target="_blank" class="text-tailwind-accent hover:underline">"House Applicaton Backend (p3)"</a> "\n"
+                                    "  * " <a node_ref=terminal_ed_link href="https://github.com/Tikkaaa3/t-ed" target="_blank" class="text-tailwind-accent hover:underline">"Terminal Education Website (p4)"</a> "\n"
+                                </span>
+                            </div>
+                        </div>
+
+                        // --- BLOCK 4: ACTIVE PROMPT (Blinking Cursor) ---
                         <div>
-                             <span class="text-tailwind-accent">"tailwind@PhoneMicrowave "</span>
+                             <span class="text-tailwind-accent">"tikka@PhoneMicrowave "</span>
                              <span class="text-tailwind-pink">"~ "</span>
                              <span class="text-tailwind-accent">"$ "</span>
-                             <span class="animate-pulse bg-gray-500 text-black px-1">"_"</span>
+                             <span class="animate-pulse bg-gray-500 text-black px-0.5">"_"</span>
                         </div>
 
                     </div>
