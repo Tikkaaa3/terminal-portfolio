@@ -16,6 +16,7 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
                 <AutoReload options=options.clone() />
                 <HydrationScripts options/>
                 <MetaTags/>
+                <link rel="icon" type="image/png" href="/cat.png" />
             </head>
             <body>
                 <App/>

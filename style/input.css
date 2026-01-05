@@ -1,4 +1,8 @@
 @import "tailwindcss";
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #7aa2f7 #1e1e2e;
+}
 
 @theme {
   /* --- CATPPUCCIN MOCHA --- */

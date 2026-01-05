@@ -7,10 +7,6 @@ use wasm_bindgen::prelude::*;
 #[cfg(target_arch = "wasm32")]
 use wasm_bindgen::JsCast;
 
-//TODO: add flexibility for phones, tablets etc.
-//TODO: add scrollbar color
-//FIX: change the app icon
-
 #[component]
 pub fn Terminal() -> impl IntoView {
     // 1. REFS: Handles for the elements we want to touch
@@ -134,7 +130,7 @@ pub fn Terminal() -> impl IntoView {
     <div class="h-screen w-screen bg-tailwind-wall flex items-center justify-center">
 
         // 2. WINDOW FRAME (The "Physical" Terminal Window)
-    <div class="w-[70vw] h-[80vh] bg-tailwind-term rounded-xl shadow-2xl border border-gray-900 flex flex-col overflow-hidden">
+    <div class="w-full h-full md:w-[90vw] md:h-[85vh] lg:w-[70vw] lg:h-[80vh] bg-tailwind-term rounded-xl shadow-2xl border border-gray-900 flex flex-col overflow-hidden">
 
             // 3. TITLE BAR (Like Ghostty/Alacritty)
             <div class="bg-cool-gray-900 px-4 py-2 flex items-center justify-between border-b border-gray-800 shrink-0">
@@ -143,8 +139,7 @@ pub fn Terminal() -> impl IntoView {
             </div>
 
             // 4. SCROLLABLE CONTENT AREA
-            <div node_ref=scroll_container class="flex-1 overflow-y-auto p-4 font-mono text-2xl scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
-
+            <div node_ref=scroll_container class="flex-1 overflow-y-auto p-4 font-mono text-xs md:text-2xl scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-transparent">
                 // --- BLOCK 1: NEOFETCH ---
                 <div class="mb-8">
                     <div class="pb-2">
@@ -154,7 +149,7 @@ pub fn Terminal() -> impl IntoView {
                         <span class="text-tailwind-pink">"fastfetch"</span>
                     </div>
 
-                    <div class="flex flex-row items-start gap-8">
+                        <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
                         <span class="text-tailwind-accent">
                             <pre>
     {r#"                    -`
@@ -242,7 +237,7 @@ Cats: Love them!"#}
                                     "  - " <a node_ref=github_link href="https://github.com/Tikkaaa3" target="_blank" class="text-tailwind-accent hover:underline">"github (gh)"</a> "\n"
                                     "  - " <a node_ref=linkedin_link href="https://www.linkedin.com/in/emre-t-kaptan/" target="_blank" class="text-tailwind-accent hover:underline">"linkedin (ln)"</a> "\n"
                                     "  - " <a node_ref=mail_link href="mailto:tikkaaa3@gmail.com" class="text-tailwind-accent hover:underline">"e-mail (em)"</a> "\n"
-                                    "  - " <a node_ref=cv_link href="../public/cv.pdf" download="cv.pdf" class="text-tailwind-accent hover:underline">"cv (cv)"</a>
+                                    "  - " <a node_ref=cv_link href="/cv.pdf" download="cv.pdf" class="text-tailwind-accent hover:underline">"cv (cv)"</a>
                                 </span>
                             </div>
                         </div>
@@ -307,6 +302,8 @@ Cats: Love them!"#}
                         </div>
                     </div>
                 </div>
+
             </div>
+                <a href="https://www.flaticon.com/free-icons/origami" title="origami icons">Origami icons created by Freepik - Flaticon</a>
         }
 }
