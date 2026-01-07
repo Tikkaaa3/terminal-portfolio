@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>tikka</title>
 
-    <link rel="icon" type="image/png" href="/cat.png" />
+    <base href="/terminal-portfolio/" />
 
+    <link rel="icon" type="image/png" href="cat.png" />
     
 <script type="module">
-import init, * as bindings from 'terminal-portfolio/terminal-portfolio-93db16e34c23eb82.js';
-const wasm = await init({ module_or_path: 'terminal-portfolio/terminal-portfolio-93db16e34c23eb82_bg.wasm' });
+import init, * as bindings from '/terminal-portfolio/terminal-portfolio-1ac43e9897b7067f.js';
+const wasm = await init({ module_or_path: '/terminal-portfolio/terminal-portfolio-1ac43e9897b7067f_bg.wasm' });
 
 
 window.wasmBindings = bindings;
@@ -19,7 +20,7 @@ window.wasmBindings = bindings;
 dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
 
 </script>
-    <link rel="stylesheet" href="terminal-portfolio/output-174fae4e3edc28e.css" integrity="sha384-sX7ntXb38IdDk+3rtJmAJCw8yhZBa7Lv7XvHN6Go3lGKSL/XmxeAcV5n9xC3pezd"/>
-  <link rel="modulepreload" href="terminal-portfolio/terminal-portfolio-93db16e34c23eb82.js" crossorigin="anonymous" integrity="sha384-kTmYwBrSvoefHT8G8rhii6Qlz+HZd9bGBVs0YKGo9NUPK6yJ92Y4Wv0uMhuWB6vb"><link rel="preload" href="terminal-portfolio/terminal-portfolio-93db16e34c23eb82_bg.wasm" crossorigin="anonymous" integrity="sha384-zNDrb6A4JxGsNbJn+bIZ3qDXed0PluF2Q6J6OQzHR/JHZWJvfhuFjZ3FIxusUkXf" as="fetch" type="application/wasm"></head>
+    <link rel="stylesheet" href="/terminal-portfolio/output-174fae4e3edc28e.css" integrity="sha384-sX7ntXb38IdDk+3rtJmAJCw8yhZBa7Lv7XvHN6Go3lGKSL/XmxeAcV5n9xC3pezd"/>
+  <link rel="modulepreload" href="/terminal-portfolio/terminal-portfolio-1ac43e9897b7067f.js" crossorigin="anonymous" integrity="sha384-MsCFc1fIVVNSCcPwCy9imCeNx1zpGYW+arA5YqBpaF0Vi9X9w6I8GiGqTdE7RiW7"><link rel="preload" href="/terminal-portfolio/terminal-portfolio-1ac43e9897b7067f_bg.wasm" crossorigin="anonymous" integrity="sha384-HpcqkfgCKt6R4N9fvWXhd5E3BsUZnyec75kwCk1yed9gpUR85K0t7Q+uc5SwYkio" as="fetch" type="application/wasm"></head>
   <body></body>
 </html>
