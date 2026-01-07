@@ -14,15 +14,8 @@ pub fn App() -> impl IntoView {
 
     view! {
         // We still keep this to inject styles, but Trunk handles the heavy lifting
-        <Stylesheet id="leptos" href="/pkg/terminal-portfolio.css"/>
         <Title text="tikka"/>
+        <Terminal/>
 
-        <Router>
-            <main>
-                <Routes fallback=|| "Page not found.".into_view()>
-                    <Route path=StaticSegment("") view=Terminal/>
-                </Routes>
-            </main>
-        </Router>
     }
 }
