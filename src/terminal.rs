@@ -56,9 +56,9 @@ pub fn Terminal() -> impl IntoView {
             // SIMPLIFIED BUFFER LOGIC
             set_buffer.update(|b| {
                 b.push_str(&key);
-                // Keep only the last 2 keys (we only care about "ln", "gh", etc.)
-                if b.len() > 2 {
-                    *b = b.chars().skip(1).collect();
+                // Keep only the last 3 keys (we only care about "ln", "gh", etc.)
+                if b.len() > 3 {
+                    *b = b.chars().skip(2).collect();
                 }
             });
 
@@ -86,22 +86,22 @@ pub fn Terminal() -> impl IntoView {
                     a.click();
                 }
                 set_buffer.set("".to_string());
-            } else if cmd.ends_with("p1") {
+            } else if cmd.ends_with("dot") {
                 if let Some(a) = dotfiles_link.get() {
                     a.click();
                 }
                 set_buffer.set("".to_string());
-            } else if cmd.ends_with("p2") {
+            } else if cmd.ends_with("cat") {
                 if let Some(a) = catt_link.get() {
                     a.click();
                 }
                 set_buffer.set("".to_string());
-            } else if cmd.ends_with("p3") {
+            } else if cmd.ends_with("hmd") {
                 if let Some(a) = house_backend_link.get() {
                     a.click();
                 }
                 set_buffer.set("".to_string());
-            } else if cmd.ends_with("p4") {
+            } else if cmd.ends_with("ted") {
                 if let Some(a) = terminal_ed_link.get() {
                     a.click();
                 }
@@ -228,7 +228,7 @@ Cats: Love them!"#}
 
                                 // Content
                                 <span class="text-tailwind-text whitespace-pre-wrap">
-                                    "Hi, I'm Emre. Software Engineering student in Wroclaw, PL.\n"
+                                    "Hi, I'm Emre. Software Development student in Wroclaw, Poland.\n"
                                     "This website is written in rust, leptos. (bc why not?)\n\n"
                                     "I am a Full-stack web developer focused on backend.\n"
                                     "I mostly use go, node-express for backend and react for frontend.\n"
@@ -269,10 +269,10 @@ Cats: Love them!"#}
                                 // Content
                                 <span class="text-tailwind-text whitespace-pre-wrap">
                                     "My projects:\n"
-                                    "  * " <a node_ref=dotfiles_link href="https://github.com/Tikkaaa3/dotfiles" target="_blank" class="text-tailwind-accent hover:underline">"Dotfiles (p1)"</a> "\n"
-                                    "  * " <a node_ref=catt_link href="https://github.com/Tikkaaa3/catt" target="_blank" class="text-tailwind-accent hover:underline">"Catt (p2)"</a> "\n"
-                                    "  * " <a node_ref=house_backend_link href="https://github.com/Tikkaaa3/HouseAppBackend" target="_blank" class="text-tailwind-accent hover:underline">"House Applicaton Backend (p3)"</a> "\n"
-                                    "  * " <a node_ref=terminal_ed_link href="https://github.com/Tikkaaa3/t-ed" target="_blank" class="text-tailwind-accent hover:underline">"Terminal Education Website (p4)"</a> "\n"
+                                    "  * " <a node_ref=dotfiles_link href="https://github.com/Tikkaaa3/dotfiles" target="_blank" class="text-tailwind-accent hover:underline">"Dotfiles (dot)"</a> "\n"
+                                    "  * " <a node_ref=catt_link href="https://github.com/Tikkaaa3/catt" target="_blank" class="text-tailwind-accent hover:underline">"Catt (cat)"</a> "\n"
+                                    "  * " <a node_ref=house_backend_link href="https://github.com/Tikkaaa3/HouseAppBackend" target="_blank" class="text-tailwind-accent hover:underline">"Homed (hmd)"</a> "\n"
+                                    "  * " <a node_ref=terminal_ed_link href="https://github.com/Tikkaaa3/t-ed" target="_blank" class="text-tailwind-accent hover:underline">"T-ed (ted)"</a> "\n"
                                 </span>
                             </div>
                         </div>

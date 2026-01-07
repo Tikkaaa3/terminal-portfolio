@@ -6,39 +6,17 @@ use leptos_router::{
     StaticSegment,
 };
 
-pub fn shell(options: LeptosOptions) -> impl IntoView {
-    view! {
-        <!DOCTYPE html>
-        <html lang="en">
-            <head>
-                <meta charset="utf-8"/>
-                <meta name="viewport" content="width=device-width, initial-scale=1"/>
-                <AutoReload options=options.clone() />
-                <HydrationScripts options/>
-                <MetaTags/>
-                <link rel="icon" type="image/png" href="/cat.png" />
-            </head>
-            <body>
-                <App/>
-            </body>
-        </html>
-    }
-}
+// DELETE the 'shell' function entirely. It is not used in CSR.
 
 #[component]
 pub fn App() -> impl IntoView {
-    // Provides context that manages stylesheets, titles, meta tags, etc.
     provide_meta_context();
 
     view! {
-        // injects a stylesheet into the document <head>
-        // id=leptos means cargo-leptos will hot-reload this stylesheet
+        // We still keep this to inject styles, but Trunk handles the heavy lifting
         <Stylesheet id="leptos" href="/pkg/terminal-portfolio.css"/>
-
-        // sets the document title
         <Title text="tikka"/>
 
-        // content for this welcome page
         <Router>
             <main>
                 <Routes fallback=|| "Page not found.".into_view()>
