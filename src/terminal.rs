@@ -237,7 +237,7 @@ Cats: Love them!"#}
                                     "  - " <a node_ref=github_link href="https://github.com/Tikkaaa3" target="_blank" class="text-tailwind-accent hover:underline">"github (gh)"</a> "\n"
                                     "  - " <a node_ref=linkedin_link href="https://www.linkedin.com/in/emre-t-kaptan/" target="_blank" class="text-tailwind-accent hover:underline">"linkedin (ln)"</a> "\n"
                                     "  - " <a node_ref=mail_link href="mailto:tikkaaa3@gmail.com" class="text-tailwind-accent hover:underline">"e-mail (em)"</a> "\n"
-                                    "  - " <a node_ref=cv_link href="/cv.pdf" download="cv.pdf" class="text-tailwind-accent hover:underline">"cv (cv)"</a>
+                                    "  - " <a node_ref=cv_link href="cv.pdf" download="cv.pdf" class="text-tailwind-accent hover:underline">"cv (cv)"</a>
                                 </span>
                             </div>
                         </div>

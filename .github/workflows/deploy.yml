@@ -24,7 +24,7 @@ jobs:
 
       # 3. Build the site
       - name: Build with Trunk
-        run: trunk build --release --public-url "terminal-portfolio"
+        run: trunk build --release --public-url "/terminal-portfolio/"
 
       # 4. Deploy to gh-pages branch
       - name: Deploy
