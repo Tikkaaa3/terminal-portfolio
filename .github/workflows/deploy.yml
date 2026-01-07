@@ -25,6 +25,9 @@ jobs:
       # 3. Build the site
       - name: Build with Trunk
         run: trunk build --release --public-url "/terminal-portfolio/"
+      # FIX: Create .nojekyll so GitHub doesn't delete the _bg.wasm file
+      - name: Create .nojekyll
+        run: touch dist/.nojekyll
 
       # 4. Deploy to gh-pages branch
       - name: Deploy
