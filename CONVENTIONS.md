@@ -1,0 +1,4 @@
+- Priority: Readability > Performance > Brevity.
+- Naming: Use the standard idiomatic casing for the detected language.
+- Functions: Small, pure, and single-responsibility.
+- Error Handling: Never swallow errors; handle them explicitly.

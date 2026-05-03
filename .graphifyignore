@@ -1,0 +1,17 @@
+.venv/
+node_modules/
+target/
+__pycache__/
+.env
+.aider*
+graphify-out/cache/
+*.pyc
+.pytest_cache/
+dist/
+build/
+*.egg-info/
+.coverage
+.DS_Store
+*.swp
+*.swo
+*~
