@@ -1,4 +1,4 @@
-import { FileSystem } from '../types/terminal';
+import type { FileSystem } from '../types/terminal';
 
 export const fileSystem: FileSystem = {
   'about.txt': {

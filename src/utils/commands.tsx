@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
+import React from 'react';
 import { getCurrentDirectory, fileSystem } from './fileSystem';
 
-export const executeCommand = (command: string): string | ReactNode => {
+export const executeCommand = (command: string): string | React.ReactNode => {
   const trimmedCommand = command.trim();
   const [cmd, ...args] = trimmedCommand.split(' ');
 

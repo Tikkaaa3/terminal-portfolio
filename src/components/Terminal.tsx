@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { CommandHistory } from '../types/terminal';
-import { executeCommand } from '../utils/commands';
+import type { CommandHistory } from '../types/terminal';
+import { executeCommand } from '../utils/commands.tsx';
 
 const Terminal: React.FC = () => {
   const [history, setHistory] = useState<CommandHistory[]>([
@@ -65,8 +65,9 @@ const Terminal: React.FC = () => {
     setCurrentInput(e.target.value);
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
+      e.preventDefault();
       const command = currentInput.trim();
       const output = executeCommand(command);
       
@@ -100,9 +101,14 @@ const Terminal: React.FC = () => {
       }}
     >
       {/* Hide scrollbar for webkit browsers */}
-      <style jsx>{`
+      <style>{`
         div::-webkit-scrollbar {
           display: none;
+        }
+        input {
+          background: transparent !important;
+          border: none !important;
+          outline: none !important;
         }
       `}</style>
       
@@ -140,8 +146,15 @@ const Terminal: React.FC = () => {
         type="text"
         value={currentInput}
         onChange={handleInputChange}
-        onKeyPress={handleKeyPress}
+        onKeyDown={handleKeyDown}
         className="absolute opacity-0 pointer-events-none"
+        style={{
+          position: 'absolute',
+          left: '-9999px',
+          top: '-9999px',
+          width: '1px',
+          height: '1px'
+        }}
         autoComplete="off"
         autoCorrect="off"
         autoCapitalize="off"

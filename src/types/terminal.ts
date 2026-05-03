@@ -1,17 +1,17 @@
-import { ReactNode } from 'react';
+import type React from 'react';
 
-export interface CommandHistory {
+export type CommandHistory = {
   command: string;
-  output: string | ReactNode;
+  output: string | React.ReactNode;
 }
 
-export interface FileSystemNode {
+export type FileSystemNode = {
   type: 'file' | 'directory';
   name: string;
   content?: string;
   children?: { [key: string]: FileSystemNode };
 }
 
-export interface FileSystem {
+export type FileSystem = {
   [key: string]: FileSystemNode;
 }
