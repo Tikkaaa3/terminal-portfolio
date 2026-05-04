@@ -100,13 +100,7 @@ export const executeCommand = (command: string): string | React.ReactNode => {
         return <span className="text-[#F07178]">cat: {filePath}: Is a directory</span>;
       }
       
-      // Render content with HTML if it contains HTML tags
-      const content = file.content || 'File is empty';
-      if (content.includes('<a ')) {
-        return <div dangerouslySetInnerHTML={{ __html: content }} />;
-      }
-      
-      return content;
+      return file.content || 'File is empty';
 
     case 'cv':
     case 'resume':

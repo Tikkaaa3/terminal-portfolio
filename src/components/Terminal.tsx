@@ -407,6 +407,8 @@ const Terminal: React.FC = () => {
                         {currentTypeText}
                         <span className="typing-cursor">█</span>
                       </>
+                    ) : typeof entry.output === 'string' && entry.output.includes('<a ') ? (
+                      <div dangerouslySetInnerHTML={{ __html: entry.output }} />
                     ) : (
                       entry.output
                     )}
