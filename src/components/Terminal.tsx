@@ -52,7 +52,7 @@ const Terminal: React.FC = () => {
   };
 
   const typeText = async (text: string, historyIndex: number) => {
-    if (typeof text !== 'string' || text.length < 50) return text;
+    if (typeof text !== 'string' || text.length < 50) return;
     
     setIsTyping(true);
     setCurrentTypeText('');
@@ -65,13 +65,14 @@ const Terminal: React.FC = () => {
     // Update the history with the final text BEFORE setting isTyping to false
     setHistory((prev) => {
       const newHistory = [...prev];
-      newHistory[historyIndex].output = text;
+      if (newHistory[historyIndex]) {
+        newHistory[historyIndex].output = text;
+      }
       return newHistory;
     });
     
     setIsTyping(false);
     setCurrentTypeText('');
-    return text;
   };
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -188,12 +189,17 @@ const Terminal: React.FC = () => {
       } else {
         // Show typing animation for string outputs
         if (typeof output === 'string' && output.length > 50) {
-          // Add entry to history first
-          setHistory((prev) => [...prev, { command, output: '', promptPath }]);
-          // Get the index of the entry we just added
-          const currentHistoryLength = history.length;
-          // Start typing animation with the correct index
-          await typeText(output, currentHistoryLength);
+          // Add entry to history first and get the correct index
+          setHistory((prev) => {
+            const newHistory = [...prev, { command, output: '', promptPath }];
+            // Start typing animation with the correct index (length of new array - 1)
+            const newIndex = newHistory.length - 1;
+            // Use setTimeout to ensure the state update happens first
+            setTimeout(() => {
+              typeText(output, newIndex);
+            }, 0);
+            return newHistory;
+          });
         } else {
           setHistory((prev) => [...prev, { command, output, promptPath }]);
         }
