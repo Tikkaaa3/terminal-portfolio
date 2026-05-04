@@ -52,10 +52,14 @@ const Terminal: React.FC = () => {
   };
 
   const typeText = async (text: string, entryIndex: number) => {
+    console.log(`typeText called: length=${text.length}, index=${entryIndex}, text preview="${text.substring(0, 50)}..."`);
+    
     if (typeof text !== 'string' || text.length < 20) {
+      console.log(`Animation skipped: text length ${text.length} < 20`);
       return;
     }
 
+    console.log(`Starting animation for index ${entryIndex}`);
     setTypingEntryIndex(entryIndex);
     setCurrentTypeText('');
     
@@ -69,6 +73,7 @@ const Terminal: React.FC = () => {
       const newHistory = [...prev];
       if (newHistory[entryIndex]) {
         newHistory[entryIndex].output = text;
+        console.log(`Animation completed for index ${entryIndex}`);
       }
       return newHistory;
     });
@@ -190,22 +195,29 @@ const Terminal: React.FC = () => {
         ]);
       } else {
         // Add entry to history first using captured promptPath
-        setHistory((prev) => [...prev, { command, output: '', promptPath }]);
-        
-        // Check if we should animate (lowered threshold for shorter content)
-        if (typeof output === 'string' && output.length > 20) {
-          // Get the index of the entry we just added
-          const newEntryIndex = history.length; // This will be the index after the new entry is added
-          // Start typing animation
-          typeText(output, newEntryIndex);
-        } else {
-          // Update the last entry immediately for short outputs
-          setHistory((prev) => {
-            const newHistory = [...prev];
-            newHistory[newHistory.length - 1].output = output;
-            return newHistory;
-          });
-        }
+        setHistory((prev) => {
+          const newHistory = [...prev, { command, output: '', promptPath }];
+          const newEntryIndex = newHistory.length - 1; // Get the correct index
+          
+          // Check if we should animate (lowered threshold for shorter content)
+          if (typeof output === 'string' && output.length > 20) {
+            // Start typing animation with correct index
+            setTimeout(() => {
+              typeText(output, newEntryIndex);
+            }, 0);
+          } else {
+            // Update immediately for short outputs
+            setTimeout(() => {
+              setHistory((prevHistory) => {
+                const updatedHistory = [...prevHistory];
+                updatedHistory[newEntryIndex].output = output;
+                return updatedHistory;
+              });
+            }, 0);
+          }
+          
+          return newHistory;
+        });
 
         // Announce command result to screen readers
         if (typeof output === 'string') {
