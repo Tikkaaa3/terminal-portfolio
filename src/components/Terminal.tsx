@@ -201,7 +201,7 @@ const Terminal: React.FC = () => {
       } else if (output === "DOWNLOAD_CV") {
         // Trigger CV download
         const link = document.createElement("a");
-        link.href = "/cv.pdf"; // You'll need to add this file to public folder
+        link.href = `${import.meta.env.BASE_URL}cv.pdf`;
         link.download = "Emre_Tolga_Kaptan_CV.pdf";
         link.click();
         setHistory((prev) => [

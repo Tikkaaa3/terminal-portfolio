@@ -7,7 +7,7 @@ import tailwindcss from '@tailwindcss/vite';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://Tikkaaa3.github.io',
-  base: '/terminal-portfolio',
+  base: '/terminal-portfolio/',
   integrations: [react()],
 
   vite: {
