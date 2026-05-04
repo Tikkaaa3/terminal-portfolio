@@ -1,43 +1,44 @@
-# Astro Starter Kit: Minimal
+# emretolgakaptan.dev — Interactive Terminal Portfolio
+
+A browser-based terminal portfolio built with Astro + React. No generic templates—just a fake filesystem, CRT effects, and keyboard navigation.
+
+## Stack
+
+- Astro
+- React + TypeScript
+- Tailwind CSS
+
+## Running Locally
 
 ```sh
-npm create astro@latest -- --template minimal
+npm install
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Build
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```sh
+npm run build
+npm run preview
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Structure
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+```
+src/
+  components/    # Terminal UI
+  pages/         # Astro entry
+  utils/         # Commands & filesystem
+  types/         # Types
+public/          # Static assets (CV, favicons, etc.)
+```
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Features
 
-## 🧞 Commands
+- `ls`, `cd`, `cat`, `pwd`, `clear`, `help` — usual shell stuff
+- `cv` — downloads the resume PDF
+- Tab completion for filenames
+- Typing animation on long outputs
+- CRT scanline overlay
 
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+The filesystem and commands live in `src/utils/`. Tweak `fileSystem.ts` to add files or directories.
