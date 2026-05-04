@@ -248,9 +248,12 @@ const Terminal: React.FC = () => {
   };
 
   return (
-    <div className="relative h-screen w-full bg-[#0A0E14]">
-      {/* Help Panel */}
-      {showHelp && (
+    <div className="terminal-container relative h-screen w-full bg-[#0A0E14]">
+      {/* CRT Effect Overlay */}
+      <div className="crt-overlay"></div>
+      
+      {/* Help Panel - only show if not booting */}
+      {showHelp && !isBooting && (
         <div className="fixed top-4 right-4 bg-[#0F1419] border-2 border-[#FFB454] rounded-lg p-4 md:p-6 shadow-2xl z-50 w-80 md:w-96 max-w-[90vw]">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-[#FFB454] font-bold text-xl">📚 Quick Help</h3>
@@ -294,43 +297,22 @@ const Terminal: React.FC = () => {
               <span className="text-[#C2D94C] font-semibold">pwd</span> - Show
               current path
             </div>
-            <div className="pt-3 border-t-2 border-[#2D3640] mt-3">
-              <div className="text-[#39BAE6] font-semibold mb-2 text-lg">
-                🚀 Quick Start:
-              </div>
-              <div className="ml-3 text-base space-y-1">
-                <div>
-                  1. Try{" "}
-                  <span className="text-[#C2D94C] font-semibold">
-                    cat about
-                  </span>
-                </div>
-                <div>
-                  2. Try{" "}
-                  <span className="text-[#C2D94C] font-semibold">
-                    ls projects
-                  </span>
-                </div>
-                <div>
-                  3. Try{" "}
-                  <span className="text-[#C2D94C] font-semibold">
-                    cat contact
-                  </span>
-                </div>
-                <div>
-                  4. Use{" "}
-                  <span className="text-[#C2D94C] font-semibold">↑/↓</span> for
-                  command history
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       )}
 
+      {/* Screen Reader Announcements */}
+      <div 
+        aria-live="polite" 
+        aria-atomic="true"
+        className="sr-only"
+      >
+        {srAnnouncement}
+      </div>
+
       <div
         ref={terminalRef}
-        className="h-screen w-full text-[#B3B1AD] font-mono p-3 md:p-6 overflow-y-auto cursor-text text-sm md:text-base"
+        className="terminal-screen h-screen w-full text-[#B3B1AD] font-mono p-3 md:p-6 overflow-y-auto cursor-text text-sm md:text-base"
         onClick={handleTerminalClick}
         role="application"
         aria-label="Interactive terminal portfolio"
@@ -359,77 +341,87 @@ const Terminal: React.FC = () => {
           }
         `}</style>
 
-        {/* Screen Reader Announcements */}
-        <div 
-          aria-live="polite" 
-          aria-atomic="true"
-          className="sr-only"
-        >
-          {srAnnouncement}
-        </div>
+        {isBooting ? (
+          <>
+            {/* Boot Sequence */}
+            {bootMessages.map((message, index) => (
+              <div key={index} className="terminal-line mb-1 text-[#4ade80]">
+                {message}
+              </div>
+            ))}
+            <div className="flex">
+              <span className="text-[#4ade80] cursor-blink">█</span>
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Command History */}
+            {history.map((entry, index) => (
+              <div key={index} className="mb-2">
+                {entry.command && (
+                  <div className="flex">
+                    <span>
+                      <span className="text-[#FFB454]">visitor@portfolio</span>
+                      <span className="text-[#B3B1AD]">:</span>
+                      <span className="text-[#C2D94C]">
+                        {entry.promptPath || "~"}
+                      </span>
+                      <span className="text-[#B3B1AD]">$ </span>
+                    </span>
+                    <span>{entry.command}</span>
+                  </div>
+                )}
+                {entry.output && (
+                  <div className="terminal-output whitespace-pre-wrap break-words mb-2">
+                    {isTyping && index === history.length - 1 ? currentTypeText : entry.output}
+                    {isTyping && index === history.length - 1 && (
+                      <span className="typing-cursor">█</span>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
 
-        {/* Command History */}
-        {history.map((entry, index) => (
-          <div key={index} className="mb-2">
-            {entry.command && (
-              <div className="flex">
-                <span>
-                  <span className="text-[#FFB454]">visitor@portfolio</span>
-                  <span className="text-[#B3B1AD]">:</span>
-                  <span className="text-[#C2D94C]">
-                    {entry.promptPath || "~"}
+            {/* Current Input Line */}
+            <div className="flex">
+              {renderPrompt()}
+              <div className="flex-1 relative">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={currentInput}
+                  onChange={handleInputChange}
+                  onKeyDown={handleKeyDown}
+                  className="bg-transparent border-none outline-none text-[#B3B1AD] font-mono caret-transparent w-full"
+                  style={{
+                    fontSize: 'inherit',
+                    fontFamily: 'inherit',
+                    lineHeight: 'inherit',
+                    padding: 0,
+                    margin: 0,
+                  }}
+                  autoComplete="off"
+                  autoCorrect="off"
+                  autoCapitalize="off"
+                  spellCheck="false"
+                  aria-label="Terminal command input"
+                />
+                {showCursor && (
+                  <span 
+                    className="bg-[#B3B1AD] text-[#0A0E14] absolute pointer-events-none cursor-blink"
+                    style={{
+                      left: `${currentInput.length}ch`,
+                      top: 0,
+                    }}
+                    aria-hidden="true"
+                  >
+                    █
                   </span>
-                  <span className="text-[#B3B1AD]">$ </span>
-                </span>
-                <span>{entry.command}</span>
+                )}
               </div>
-            )}
-            {entry.output && (
-              <div className="whitespace-pre-wrap break-words mb-2">
-                {entry.output}
-              </div>
-            )}
-          </div>
-        ))}
-
-        {/* Current Input Line */}
-        <div className="flex">
-          {renderPrompt()}
-          <div className="flex-1 relative">
-            <input
-              ref={inputRef}
-              type="text"
-              value={currentInput}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyDown}
-              className="bg-transparent border-none outline-none text-[#B3B1AD] font-mono caret-transparent w-full"
-              style={{
-                fontSize: 'inherit',
-                fontFamily: 'inherit',
-                lineHeight: 'inherit',
-                padding: 0,
-                margin: 0,
-              }}
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-              spellCheck="false"
-              aria-label="Terminal command input"
-            />
-            {showCursor && (
-              <span 
-                className="bg-[#B3B1AD] text-[#0A0E14] absolute pointer-events-none"
-                style={{
-                  left: `${currentInput.length}ch`,
-                  top: 0,
-                }}
-                aria-hidden="true"
-              >
-                █
-              </span>
-            )}
-          </div>
-        </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
