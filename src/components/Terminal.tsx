@@ -52,7 +52,7 @@ const Terminal: React.FC = () => {
   };
 
   const typeText = async (text: string, entryIndex: number) => {
-    if (typeof text !== 'string' || text.length < 50) {
+    if (typeof text !== 'string' || text.length < 20) {
       return;
     }
 
@@ -60,7 +60,7 @@ const Terminal: React.FC = () => {
     setCurrentTypeText('');
     
     for (let i = 0; i <= text.length; i++) {
-      await new Promise(resolve => setTimeout(resolve, 20 + Math.random() * 10));
+      await new Promise(resolve => setTimeout(resolve, 15 + Math.random() * 8));
       setCurrentTypeText(text.substring(0, i));
     }
     
@@ -189,14 +189,11 @@ const Terminal: React.FC = () => {
           { command, output: "Downloading CV...", promptPath },
         ]);
       } else {
-        const path = getCurrentPath();
-        const promptPath = path.length === 0 ? "~" : `~/${path.join("/")}`;
-  
-        // Add entry to history first
+        // Add entry to history first using captured promptPath
         setHistory((prev) => [...prev, { command, output: '', promptPath }]);
         
-        // Check if we should animate
-        if (typeof output === 'string' && output.length > 50) {
+        // Check if we should animate (lowered threshold for shorter content)
+        if (typeof output === 'string' && output.length > 20) {
           // Get the index of the entry we just added
           const newEntryIndex = history.length; // This will be the index after the new entry is added
           // Start typing animation
