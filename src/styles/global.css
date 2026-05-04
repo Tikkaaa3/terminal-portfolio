@@ -22,3 +22,110 @@ html, body {
 *::-webkit-scrollbar {
   display: none;
 }
+
+/* CRT Terminal Effects */
+.terminal-container {
+  position: relative;
+  background: #0A0E14;
+  overflow: hidden;
+  border: 2px solid #1a1a1a;
+  border-radius: 8px;
+  box-shadow: 
+    0 0 30px rgba(0, 0, 0, 0.8),
+    inset 0 0 30px rgba(255, 255, 255, 0.05);
+}
+
+.terminal-screen {
+  position: relative;
+  background: radial-gradient(ellipse at center, #0d1117 0%, #0A0E14 100%);
+  text-shadow: 0 0 5px currentColor;
+}
+
+/* CRT Scanlines Effect */
+.crt-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  background: linear-gradient(
+    transparent 0%,
+    rgba(32, 128, 32, 0.03) 50%,
+    transparent 100%
+  );
+  background-size: 100% 3px;
+  animation: scanlines 0.1s linear infinite;
+}
+
+@keyframes scanlines {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(3px); }
+}
+
+/* Enhanced cursor blink with glow */
+.cursor-blink {
+  animation: blink 1s ease-in-out infinite alternate;
+  text-shadow: 0 0 8px currentColor;
+}
+
+@keyframes blink {
+  0% { 
+    opacity: 1; 
+    text-shadow: 0 0 8px currentColor, 0 0 12px currentColor;
+  }
+  100% { 
+    opacity: 0.3; 
+    text-shadow: none;
+  }
+}
+
+/* Terminal line formatting */
+.terminal-line {
+  line-height: 1.4;
+  padding: 1px 0;
+  text-shadow: 0 0 5px currentColor;
+}
+
+.terminal-output {
+  margin-left: 0;
+  padding-left: 0;
+  color: #B3B1AD;
+}
+
+/* Typing cursor animation */
+.typing-cursor {
+  color: #4ade80;
+  animation: typing-blink 0.8s infinite;
+  text-shadow: 0 0 8px #4ade80;
+}
+
+@keyframes typing-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Enhanced glow effects */
+.text-green-400 {
+  text-shadow: 0 0 8px #4ade80;
+}
+
+/* Screen subtle glow */
+.terminal-screen {
+  box-shadow: 
+    inset 0 0 50px rgba(179, 177, 173, 0.1);
+}
+
+/* Optional subtle flicker effect */
+@keyframes flicker {
+  0% { opacity: 1; }
+  97% { opacity: 1; }
+  98% { opacity: 0.98; }
+  99% { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+.terminal-screen {
+  animation: flicker 4s linear infinite;
+}

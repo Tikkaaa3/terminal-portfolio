@@ -4,34 +4,7 @@ import { executeCommand } from "../utils/commands.tsx";
 import { getCurrentPath, getCurrentDirectory } from "../utils/fileSystem";
 
 const Terminal: React.FC = () => {
-  const [history, setHistory] = useState<CommandHistory[]>([
-    {
-      command: "",
-      output: (
-        <div className="mb-4">
-          <div className="text-[#FFB454] text-lg md:text-xl font-bold mb-1">
-            ╭────────────────────────────────────────────────────╮
-          </div>
-          <div className="text-[#FFB454] text-lg md:text-xl font-bold mb-1">
-            │  Emre Tolga Kaptan - Backend Developer           │
-          </div>
-          <div className="text-[#FFB454] text-lg md:text-xl font-bold mb-4">
-            ╰────────────────────────────────────────────────────╯
-          </div>
-
-          <div className="text-[#B3B1AD] text-xs md:text-sm mb-2">
-            📂 Type <span className="text-[#C2D94C] font-semibold">help</span> to toggle help panel
-          </div>
-          <div className="text-[#B3B1AD] text-xs md:text-sm mb-2">
-            📁 Type <span className="text-[#C2D94C] font-semibold">ls</span> to explore files
-          </div>
-          <div className="text-[#B3B1AD] text-xs md:text-sm">
-            📄 Type <span className="text-[#C2D94C] font-semibold">cv</span> to download resume
-          </div>
-        </div>
-      ),
-    },
-  ]);
+  const [history, setHistory] = useState<CommandHistory[]>([]);
   const [currentInput, setCurrentInput] = useState("");
   const [showCursor, setShowCursor] = useState(true);
   const [, setCurrentPath] = useState<string[]>([]);
@@ -39,11 +12,58 @@ const Terminal: React.FC = () => {
   const [historyIndex, setHistoryIndex] = useState<number>(-1);
   const [showHelp, setShowHelp] = useState(true);
   const [srAnnouncement, setSrAnnouncement] = useState<string>('');
+  const [isBooting, setIsBooting] = useState(true);
+  const [bootMessages, setBootMessages] = useState<string[]>([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const [currentTypeText, setCurrentTypeText] = useState('');
 
   const announceToScreenReader = (message: string) => {
     setSrAnnouncement(message);
     // Clear after a short delay to avoid clutter
     setTimeout(() => setSrAnnouncement(''), 1000);
+  };
+
+  const bootSequence = async () => {
+    const messages = [
+      'Initializing terminal environment...',
+      'Loading portfolio data...',
+      'Establishing secure connection...',
+      'Mounting file system...',
+      '✓ System ready',
+      '',
+      '╔══════════════════════════════════════════════════════════════╗',
+      '║                 Welcome to Emre\'s Terminal Portfolio         ║',
+      '║                      Backend Developer                       ║',
+      '╚══════════════════════════════════════════════════════════════╝',
+      '',
+      'Type "help" to see available commands.',
+      'Type "ls" to explore the file system.',
+      'Type "cat about" to learn more about me.',
+      '',
+    ];
+
+    for (let i = 0; i < messages.length; i++) {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      setBootMessages(prev => [...prev, messages[i]]);
+    }
+    
+    await new Promise(resolve => setTimeout(resolve, 800));
+    setIsBooting(false);
+  };
+
+  const typeText = async (text: string) => {
+    if (typeof text !== 'string' || text.length < 50) return text;
+    
+    setIsTyping(true);
+    setCurrentTypeText('');
+    
+    for (let i = 0; i <= text.length; i++) {
+      await new Promise(resolve => setTimeout(resolve, Math.random() * 30 + 10));
+      setCurrentTypeText(text.substring(0, i));
+    }
+    
+    setIsTyping(false);
+    return text;
   };
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -69,6 +89,10 @@ const Terminal: React.FC = () => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
+  }, []);
+
+  useEffect(() => {
+    bootSequence();
   }, []);
 
   const handleTerminalClick = (e: React.MouseEvent) => {
@@ -116,7 +140,7 @@ const Terminal: React.FC = () => {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Tab") {
       e.preventDefault();
       handleTabCompletion();
@@ -154,7 +178,18 @@ const Terminal: React.FC = () => {
           { command, output: "Downloading CV...", promptPath },
         ]);
       } else {
-        setHistory((prev) => [...prev, { command, output, promptPath }]);
+        // Show typing animation for string outputs
+        if (typeof output === 'string' && output.length > 50) {
+          setHistory((prev) => [...prev, { command, output: '', promptPath }]);
+          const typedOutput = await typeText(output);
+          setHistory((prev) => {
+            const newHistory = [...prev];
+            newHistory[newHistory.length - 1].output = typedOutput;
+            return newHistory;
+          });
+        } else {
+          setHistory((prev) => [...prev, { command, output, promptPath }]);
+        }
         // Announce command result to screen readers
         if (typeof output === 'string') {
           announceToScreenReader(`Command ${command} executed. Output: ${output.substring(0, 100)}...`);
