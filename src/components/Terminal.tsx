@@ -51,7 +51,7 @@ const Terminal: React.FC = () => {
     setIsBooting(false);
   };
 
-  const typeText = async (text: string) => {
+  const typeText = async (text: string, historyIndex: number) => {
     if (typeof text !== 'string' || text.length < 50) return text;
     
     setIsTyping(true);
@@ -62,7 +62,15 @@ const Terminal: React.FC = () => {
       setCurrentTypeText(text.substring(0, i));
     }
     
+    // Update the history with the final text BEFORE setting isTyping to false
+    setHistory((prev) => {
+      const newHistory = [...prev];
+      newHistory[historyIndex].output = text;
+      return newHistory;
+    });
+    
     setIsTyping(false);
+    setCurrentTypeText('');
     return text;
   };
 
@@ -180,16 +188,16 @@ const Terminal: React.FC = () => {
       } else {
         // Show typing animation for string outputs
         if (typeof output === 'string' && output.length > 50) {
+          // Add entry to history first
           setHistory((prev) => [...prev, { command, output: '', promptPath }]);
-          const typedOutput = await typeText(output);
-          setHistory((prev) => {
-            const newHistory = [...prev];
-            newHistory[newHistory.length - 1].output = typedOutput;
-            return newHistory;
-          });
+          // Get the index of the entry we just added
+          const currentHistoryLength = history.length;
+          // Start typing animation with the correct index
+          await typeText(output, currentHistoryLength);
         } else {
           setHistory((prev) => [...prev, { command, output, promptPath }]);
         }
+        
         // Announce command result to screen readers
         if (typeof output === 'string') {
           announceToScreenReader(`Command ${command} executed. Output: ${output.substring(0, 100)}...`);
@@ -373,9 +381,13 @@ const Terminal: React.FC = () => {
                 )}
                 {entry.output && (
                   <div className="terminal-output whitespace-pre-wrap break-words mb-2">
-                    {isTyping && index === history.length - 1 ? currentTypeText : entry.output}
-                    {isTyping && index === history.length - 1 && (
-                      <span className="typing-cursor">█</span>
+                    {isTyping && index === history.length - 1 ? (
+                      <>
+                        {currentTypeText}
+                        <span className="typing-cursor">█</span>
+                      </>
+                    ) : (
+                      entry.output
                     )}
                   </div>
                 )}
