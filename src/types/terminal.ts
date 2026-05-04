@@ -3,6 +3,7 @@ import type React from 'react';
 export type CommandHistory = {
   command: string;
   output: string | React.ReactNode;
+  promptPath?: string;
 }
 
 export type FileSystemNode = {
