@@ -38,6 +38,13 @@ const Terminal: React.FC = () => {
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState<number>(-1);
   const [showHelp, setShowHelp] = useState(true);
+  const [srAnnouncement, setSrAnnouncement] = useState<string>('');
+
+  const announceToScreenReader = (message: string) => {
+    setSrAnnouncement(message);
+    // Clear after a short delay to avoid clutter
+    setTimeout(() => setSrAnnouncement(''), 1000);
+  };
 
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
@@ -64,9 +71,13 @@ const Terminal: React.FC = () => {
     }
   }, []);
 
-  const handleTerminalClick = () => {
+  const handleTerminalClick = (e: React.MouseEvent) => {
+    e.preventDefault();
     if (inputRef.current) {
       inputRef.current.focus();
+      // Position cursor at end of input
+      const length = currentInput.length;
+      inputRef.current.setSelectionRange(length, length);
     }
   };
 
@@ -144,6 +155,10 @@ const Terminal: React.FC = () => {
         ]);
       } else {
         setHistory((prev) => [...prev, { command, output, promptPath }]);
+        // Announce command result to screen readers
+        if (typeof output === 'string') {
+          announceToScreenReader(`Command ${command} executed. Output: ${output.substring(0, 100)}...`);
+        }
       }
 
       // Add command to history (if not empty)
@@ -282,6 +297,8 @@ const Terminal: React.FC = () => {
         ref={terminalRef}
         className="h-screen w-full text-[#B3B1AD] font-mono p-3 md:p-6 overflow-y-auto cursor-text text-sm md:text-base"
         onClick={handleTerminalClick}
+        role="application"
+        aria-label="Interactive terminal portfolio"
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
@@ -296,8 +313,25 @@ const Terminal: React.FC = () => {
             background: transparent !important;
             border: none !important;
             outline: none !important;
+            box-shadow: none !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            appearance: none !important;
+          }
+          input:focus {
+            outline: none !important;
+            box-shadow: none !important;
           }
         `}</style>
+
+        {/* Screen Reader Announcements */}
+        <div 
+          aria-live="polite" 
+          aria-atomic="true"
+          className="sr-only"
+        >
+          {srAnnouncement}
+        </div>
 
         {/* Command History */}
         {history.map((entry, index) => (
@@ -327,33 +361,40 @@ const Terminal: React.FC = () => {
         <div className="flex">
           {renderPrompt()}
           <div className="flex-1 relative">
-            <span>{currentInput}</span>
+            <input
+              ref={inputRef}
+              type="text"
+              value={currentInput}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              className="bg-transparent border-none outline-none text-[#B3B1AD] font-mono caret-transparent w-full"
+              style={{
+                fontSize: 'inherit',
+                fontFamily: 'inherit',
+                lineHeight: 'inherit',
+                padding: 0,
+                margin: 0,
+              }}
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck="false"
+              aria-label="Terminal command input"
+            />
             {showCursor && (
-              <span className="bg-[#B3B1AD] text-[#0A0E14] ml-0">█</span>
+              <span 
+                className="bg-[#B3B1AD] text-[#0A0E14] absolute pointer-events-none"
+                style={{
+                  left: `${currentInput.length}ch`,
+                  top: 0,
+                }}
+                aria-hidden="true"
+              >
+                █
+              </span>
             )}
           </div>
         </div>
-
-        {/* Hidden Input Field */}
-        <input
-          ref={inputRef}
-          type="text"
-          value={currentInput}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          className="absolute opacity-0 pointer-events-none"
-          style={{
-            position: "absolute",
-            left: "-9999px",
-            top: "-9999px",
-            width: "1px",
-            height: "1px",
-          }}
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          spellCheck="false"
-        />
       </div>
     </div>
   );
