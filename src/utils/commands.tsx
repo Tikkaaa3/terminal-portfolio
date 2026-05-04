@@ -1,84 +1,101 @@
-import React from 'react';
-import { getCurrentDirectory, navigateToDirectory, getFileFromPath, getCurrentPathString, resolveFilePath } from './fileSystem';
+import React from "react";
+import {
+  getCurrentDirectory,
+  navigateToDirectory,
+  getFileFromPath,
+  getCurrentPathString,
+  resolveFilePath,
+} from "./fileSystem";
 
 export const executeCommand = (command: string): string | React.ReactNode => {
   const trimmedCommand = command.trim();
-  const [cmd, ...args] = trimmedCommand.split(' ');
+  const [cmd, ...args] = trimmedCommand.split(" ");
 
   switch (cmd.toLowerCase()) {
-    case 'help':
-      return 'TOGGLE_HELP';
+    case "help":
+      return "TOGGLE_HELP";
 
-    case 'clear':
-      return 'CLEAR_TERMINAL'; // Special flag for clearing
+    case "clear":
+      return "CLEAR_TERMINAL"; // Special flag for clearing
 
-    case 'whoami':
-      return 'visitor@portfolio - Welcome to my interactive terminal portfolio!\n\nYou are currently browsing my professional portfolio in terminal mode.\nFeel free to explore the file system to learn more about my work and experience.';
+    case "whoami":
+      return "Emre Tolga Kaptan ~ Software Engineer in Poland";
 
-    case 'pwd':
+    case "pwd":
       return getCurrentPathString();
 
-    case 'cd':
+    case "cd":
       if (args.length === 0) {
         // cd with no args goes to home
-        const result = navigateToDirectory('~');
-        return result.success ? '' : result.message || '';
+        const result = navigateToDirectory("~");
+        return result.success ? "" : result.message || "";
       }
-      
+
       const dirName = args[0];
       const result = navigateToDirectory(dirName);
-      
+
       if (!result.success) {
         return <span className="text-[#F07178]">{result.message}</span>;
       }
-      
-      return ''; // Success, no output
 
-    case 'ls':
+      return ""; // Success, no output
+
+    case "ls":
       let targetDir;
-      
+
       if (args.length === 0) {
         // ls with no args - list current directory
         targetDir = getCurrentDirectory();
       } else {
         // ls <directory> - list specific directory
         let dirName = args[0];
-        
+
         // Remove trailing slash if present
-        dirName = dirName.endsWith('/') ? dirName.slice(0, -1) : dirName;
-        
+        dirName = dirName.endsWith("/") ? dirName.slice(0, -1) : dirName;
+
         const target = getFileFromPath(dirName);
-        
+
         if (!target) {
-          return <span className="text-[#F07178]">ls: cannot access '{dirName}': No such file or directory</span>;
+          return (
+            <span className="text-[#F07178]">
+              ls: cannot access '{dirName}': No such file or directory
+            </span>
+          );
         }
-        
-        if (target.type !== 'directory') {
-          return <span className="text-[#F07178]">ls: {dirName}: Not a directory</span>;
+
+        if (target.type !== "directory") {
+          return (
+            <span className="text-[#F07178]">
+              ls: {dirName}: Not a directory
+            </span>
+          );
         }
-        
+
         targetDir = target.children || {};
       }
-      
+
       const items = Object.values(targetDir)
-        .map(item => {
-          const icon = item.type === 'directory' ? '📁' : '📄';
-          const color = item.type === 'directory' ? 'text-[#C2D94C]' : 'text-[#B3B1AD]';
+        .map((item) => {
+          const icon = item.type === "directory" ? "📁" : "📄";
+          const color =
+            item.type === "directory" ? "text-[#C2D94C]" : "text-[#B3B1AD]";
           return `<span class="${color}">${icon} ${item.name}</span>`;
         })
-        .join('   ');
+        .join("   ");
       return <div dangerouslySetInnerHTML={{ __html: items }} />;
 
-    case 'cat':
+    case "cat":
       if (args.length === 0) {
-        return <span className="text-[#F07178]">cat: missing file operand</span>;
+        return (
+          <span className="text-[#F07178]">cat: missing file operand</span>
+        );
       }
-      
+
       const filePath = args[0];
-      
+
       // Check if path contains / (e.g., projects/t-learn.txt)
       let file;
-      if (filePath.includes('/')) {
+      if (filePath.includes("/")) {
         const result = resolveFilePath(filePath);
         if (result.error) {
           return <span className="text-[#F07178]">cat: {result.error}</span>;
@@ -88,38 +105,52 @@ export const executeCommand = (command: string): string | React.ReactNode => {
         // Simple filename in current directory
         file = getFileFromPath(filePath);
         if (!file) {
-          return <span className="text-[#F07178]">cat: {filePath}: No such file or directory</span>;
+          return (
+            <span className="text-[#F07178]">
+              cat: {filePath}: No such file or directory
+            </span>
+          );
         }
       }
-      
+
       if (!file) {
-        return <span className="text-[#F07178]">cat: {filePath}: No such file or directory</span>;
+        return (
+          <span className="text-[#F07178]">
+            cat: {filePath}: No such file or directory
+          </span>
+        );
       }
-      
-      if (file.type === 'directory') {
-        return <span className="text-[#F07178]">cat: {filePath}: Is a directory</span>;
-      }
-      
-      return file.content || 'File is empty';
 
-    case 'cv':
-    case 'resume':
+      if (file.type === "directory") {
+        return (
+          <span className="text-[#F07178]">
+            cat: {filePath}: Is a directory
+          </span>
+        );
+      }
+
+      return file.content || "File is empty";
+
+    case "cv":
+    case "resume":
       // Trigger CV download
-      return 'DOWNLOAD_CV';
+      return "DOWNLOAD_CV";
 
-    case 'echo':
+    case "echo":
       if (args.length === 0) {
-        return '';
+        return "";
       }
-      return args.join(' ');
+      return args.join(" ");
 
-    case 'date':
+    case "date":
       return new Date().toString();
 
-    case '':
-      return ''; // Empty command
+    case "":
+      return ""; // Empty command
 
     default:
-      return <span className="text-[#F07178]">bash: {cmd}: command not found</span>;
+      return (
+        <span className="text-[#F07178]">bash: {cmd}: command not found</span>
+      );
   }
 };

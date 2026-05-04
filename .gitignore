@@ -23,3 +23,11 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 .aider*
+
+.graphifyignore
+AGENTS.md
+CONVENTIONS.md
+graphify-out/
+firecrawl_skill.md
+
+.vscode

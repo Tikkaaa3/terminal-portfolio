@@ -20,7 +20,7 @@ const Terminal: React.FC = () => {
   const announceToScreenReader = (message: string) => {
     setSrAnnouncement(message);
     // Clear after a short delay to avoid clutter
-    setTimeout(() => setSrAnnouncement(""), 1000);
+    setTimeout(() => setSrAnnouncement(""), 200);
   };
 
   const bootSequence = async () => {
@@ -32,8 +32,8 @@ const Terminal: React.FC = () => {
       "✓ System ready",
       "",
       "╔══════════════════════════════════════════════════════════════╗",
-      "║                 Welcome to Emre's Terminal Portfolio         ║",
-      "║                      Backend Developer                       ║",
+      "║               Welcome to the Engine Room                     ║",
+      "║        I turn coffee into stable APIs and clean code         ║",
       "╚══════════════════════════════════════════════════════════════╝",
       "",
       'Type "help" to see available commands.',
@@ -47,7 +47,7 @@ const Terminal: React.FC = () => {
       setBootMessages((prev) => [...prev, messages[i]]);
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 2800));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     setIsBooting(false);
   };
 
@@ -318,6 +318,10 @@ const Terminal: React.FC = () => {
               Toggle ON/OFF help panel
             </div>
             <div className="text-sm md:text-base">
+              <span className="text-[#C2D94C] font-semibold">whoami</span> -
+              Short introduction
+            </div>
+            <div className="text-sm md:text-base">
               <span className="text-[#C2D94C] font-semibold">ls [dir]</span> -
               List files & directories
             </div>
@@ -393,7 +397,10 @@ const Terminal: React.FC = () => {
 
         {/* Boot Sequence - persists after boot completes */}
         {bootMessages.map((message, index) => (
-          <div key={`boot-${index}`} className="terminal-line mb-1 text-[#4ade80]">
+          <div
+            key={`boot-${index}`}
+            className="terminal-line whitespace-pre-wrap mb-1 text-[#4ade80]"
+          >
             {message}
           </div>
         ))}

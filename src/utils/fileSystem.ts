@@ -11,7 +11,7 @@ export const fileSystem: FileSystem = {
     type: "file",
     name: "contact",
     content:
-      "CONTACT\n=======\n\nEmail: <a href='mailto:tikkaaa3@gmail.com' class='text-[#39BAE6] hover:underline' target='_blank'>tikkaaa3@gmail.com</a>\nPhone: +48 452 014 231\nLinkedIn: <a href='https://linkedin.com/in/emre-t-kaptan' class='text-[#39BAE6] hover:underline' target='_blank'>linkedin.com/in/emre-t-kaptan</a>\nGitHub: <a href='https://github.com/Tikkaaa3' class='text-[#39BAE6] hover:underline' target='_blank'>github.com/Tikkaaa3</a>\n\nSeeking a Backend Internship in Poland.",
+      "CONTACT\n=======\n\nEmail: <a href='mailto:tikkaaa3@gmail.com' class='text-[#39BAE6] hover:underline' target='_blank'>tikkaaa3@gmail.com</a>\nPhone: +48 452 014 231\nLinkedIn: <a href='https://linkedin.com/in/emre-t-kaptan' class='text-[#39BAE6] hover:underline' target='_blank'>linkedin.com/in/emre-t-kaptan</a>\nGitHub: <a href='https://github.com/Tikkaaa3' class='text-[#39BAE6] hover:underline' target='_blank'>github.com/Tikkaaa3</a>\n\nSeeking Engineering Internships in Poland",
   },
   edu: {
     type: "file",
@@ -23,7 +23,7 @@ export const fileSystem: FileSystem = {
     type: "file",
     name: "certs",
     content:
-      "CERTIFICATIONS\n==============\n\n• IBM Full-Stack Developer Certificate (2023)\n  - Cloud Native Development\n  - CI/CD Pipelines\n  - React & Django\n  - RESTful APIs\n\n• Boot.dev Software Engineering Curriculum (2026)\n  - Data Structures & Algorithms\n  - Backend Development\n  - SQL & Database Design\n  - Web Servers\n\n• Cloud Computing Coursework\n  - AWS (S3, EC2)\n  - Microsoft Azure\n  - Container Orchestration",
+      "CERTIFICATIONS\n==============\n\n• IBM Full-Stack Developer Certificate (2023)\n  - Cloud Native Development\n  - CI/CD Pipelines\n  - React & Django\n  - RESTful APIs\n\n• Boot.dev Software Engineering Curriculum (2026)\n  - Data Structures & Algorithms\n  - Backend Development\n  - SQL & Database Design\n  - Web Servers",
   },
   projects: {
     type: "directory",
@@ -47,23 +47,23 @@ export const fileSystem: FileSystem = {
     type: "directory",
     name: "skills",
     children: {
-      languages: {
-        type: "file",
-        name: "languages",
-        content:
-          "PROGRAMMING LANGUAGES\n=====================\n\n- Go\n- TypeScript\n- JavaScript\n- Python\n- SQL",
-      },
       backend: {
         type: "file",
         name: "backend",
         content:
-          "BACKEND & DATABASES\n===================\n\nFrameworks:\n- Node.js (Express)\n- Django\n\nDatabases & ORMs:\n- PostgreSQL\n- MongoDB\n- Prisma ORM\n\nArchitecture & Auth:\n- REST API Design\n- Authentication (JWT, Argon2)\n\nTesting:\n- Jest\n- Go testing",
+          "BACKEND & LOGIC\n===============\n\nLanguages:\n- Go, JavaScript, TypeScript, Python, SQL\n\nFrameworks:\n- Node.js (Express)\n- Django\n\nDatabases & Storage:\n- PostgreSQL, MongoDB\n- Prisma ORM\n\nArchitecture:\n- RESTful API Design\n- Auth (JWT, Argon2)\n- Jest / Unit Testing",
       },
       frontend: {
         type: "file",
         name: "frontend",
         content:
-          "FRONTEND & CLOUD\n================\n\nFrontend:\n- React\n- TypeScript\n- Tailwind CSS\n\nCloud Platforms:\n- AWS (S3)\n- Microsoft Azure\n\nTools:\n- Docker\n- Git\n- Linux",
+          "FRONTEND & UI\n=============\n\nLanguages:\n- JavaScript, TypeScript, HTML/CSS\n\nLibraries & Frameworks:\n- React.js\n- Tailwind CSS\n- Next.js\n\nDesign Concepts:\n- Responsive Web Design\n- Mobile-First Approach\n- Component Architecture",
+      },
+      tools: {
+        type: "file",
+        name: "tools",
+        content:
+          "TOOLS & DEVOPS\n==============\n\nCloud:\n- AWS (S3), Microsoft Azure\n\nWorkflow:\n- Docker (Containerization)\n- Git (Version Control)\n- Linux (CLI & Scripting)\n- Postman / Bruno",
       },
     },
   },
@@ -71,17 +71,11 @@ export const fileSystem: FileSystem = {
     type: "directory",
     name: "blog",
     children: {
-      "rest-apis": {
+      "hello-world": {
         type: "file",
-        name: "rest-apis",
+        name: "hello-world",
         content:
-          "Building Scalable REST APIs with Go\n====================================\n\nDate: March 2026\n\nIn this article, I share my experience building production-ready REST APIs using Go and PostgreSQL.\n\nKey Takeaways:\n\n• Designing Clean API Architecture\n  - Separation of concerns with handlers, services, and repositories\n  - Middleware pattern for authentication and logging\n  - Error handling best practices\n\n• Database Design & Performance\n  - Proper indexing strategies for PostgreSQL\n  - Connection pooling optimization\n  - Using prepared statements to prevent SQL injection\n\n• Authentication & Security\n  - Implementing JWT-based authentication\n  - Password hashing with Argon2\n  - Rate limiting to prevent abuse\n\n• Testing Strategy\n  - Unit tests for business logic\n  - Integration tests with test databases\n  - Table-driven tests in Go\n\nReal-world Example:\nIn my t-learn project, I implemented these patterns to handle user authentication, lesson management, and progress tracking. The API serves thousands of requests while maintaining sub-100ms response times.\n\nLessons Learned:\n- Always validate input at the API boundary\n- Use database transactions for complex operations\n- Monitor API performance from day one\n- Document your endpoints (OpenAPI/Swagger)",
-      },
-      docker: {
-        type: "file",
-        name: "docker",
-        content:
-          "Dockerizing Full-Stack Applications\n====================================\n\nDate: February 2026\n\nDocker has become essential for modern development. Here's how I containerize full-stack applications for consistent deployment.\n\nCore Concepts:\n\n• Multi-Stage Builds\n  - Separate build and runtime stages\n  - Reduce image size by 70%+\n  - Include only production dependencies\n\n• Docker Compose for Local Development\n  - Orchestrate frontend, backend, and database\n  - Volume mounting for hot-reload during development\n  - Environment variable management\n\n• Production Best Practices\n  - Use specific version tags (not 'latest')\n  - Run containers as non-root users\n  - Implement health checks\n  - Optimize layer caching\n\nExample from My Projects:\n\nIn the homed project, I used Docker Compose to run:\n- Node.js backend (TypeScript)\n- PostgreSQL database\n- Prisma migrations\n\nBenefits:\n✓ Consistent environment across team members\n✓ Easy onboarding (docker-compose up)\n✓ Production parity\n✓ Simple CI/CD integration\n\nPractical Tips:\n- Use .dockerignore to exclude node_modules\n- Keep Dockerfiles simple and readable\n- Monitor container resource usage\n- Regularly update base images for security",
+          'Hello, World! (Again)\n====================\n\nDate: May 2026\n\nWelcome to the corner of the internet where I document my journey through the ever-changing world of software development. I decided to add a blog to my portfolio because, let’s be real, code snippets only tell half the story.\n\nWhat to expect here:\n\n• Project Deep Dives\n  - Breaking down how I built the things you see in my portfolio\n  - Documenting the "why" behind the tech stack\n\n• Learning in Public\n  - Notes on new frameworks or languages I’m currently tackling\n  - Mistakes I made so you don\'t have to\n\n• Tech Life & Hot Takes\n  - My thoughts on the latest industry trends\n  - The occasional rant about CSS centering\n\nBehind every clean UI or optimized API is a mountain of discarded ideas, three-hour debugging sessions over a missing semicolon, and at least four cups of coffee.\n\nLessons Learned So Far:\n- Documentation is a love letter to your future self\n- It’s okay to not know everything on day one\n- Community feedback is the fastest way to grow\n\nThanks for stopping by. Stick around if you like reading about tech, triumphs, and the occasional "it worked on my machine" mystery!',
       },
     },
   },
