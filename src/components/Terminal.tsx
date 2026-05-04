@@ -391,19 +391,20 @@ const Terminal: React.FC = () => {
           }
         `}</style>
 
-        {isBooting ? (
-          <>
-            {/* Boot Sequence */}
-            {bootMessages.map((message, index) => (
-              <div key={index} className="terminal-line mb-1 text-[#4ade80]">
-                {message}
-              </div>
-            ))}
-            <div className="flex">
-              <span className="text-[#4ade80] cursor-blink">█</span>
-            </div>
-          </>
-        ) : (
+        {/* Boot Sequence - persists after boot completes */}
+        {bootMessages.map((message, index) => (
+          <div key={`boot-${index}`} className="terminal-line mb-1 text-[#4ade80]">
+            {message}
+          </div>
+        ))}
+
+        {isBooting && (
+          <div className="flex">
+            <span className="text-[#4ade80] cursor-blink">█</span>
+          </div>
+        )}
+
+        {!isBooting && (
           <>
             {/* Command History */}
             {history.map((entry, index) => (
