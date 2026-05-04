@@ -1,5 +1,5 @@
 import React from 'react';
-import { getCurrentDirectory, fileSystem } from './fileSystem';
+import { getCurrentDirectory, navigateToDirectory, getFileFromPath, getCurrentPathString, resolveFilePath } from './fileSystem';
 
 export const executeCommand = (command: string): string | React.ReactNode => {
   const trimmedCommand = command.trim();
@@ -7,18 +7,7 @@ export const executeCommand = (command: string): string | React.ReactNode => {
 
   switch (cmd.toLowerCase()) {
     case 'help':
-      return `Available commands:
-
-  help          Show this help message
-  clear         Clear the terminal
-  ls            List directory contents
-  cat <file>    Display file contents
-  whoami        Display user information
-  pwd           Show current directory
-  echo <text>   Display text
-  
-Try 'ls' to see available files and directories.
-Use 'cat <filename>' to read file contents.`;
+      return 'TOGGLE_HELP';
 
     case 'clear':
       return 'CLEAR_TERMINAL'; // Special flag for clearing
@@ -27,11 +16,51 @@ Use 'cat <filename>' to read file contents.`;
       return 'visitor@portfolio - Welcome to my interactive terminal portfolio!\n\nYou are currently browsing my professional portfolio in terminal mode.\nFeel free to explore the file system to learn more about my work and experience.';
 
     case 'pwd':
-      return '/home/portfolio';
+      return getCurrentPathString();
+
+    case 'cd':
+      if (args.length === 0) {
+        // cd with no args goes to home
+        const result = navigateToDirectory('~');
+        return result.success ? '' : result.message || '';
+      }
+      
+      const dirName = args[0];
+      const result = navigateToDirectory(dirName);
+      
+      if (!result.success) {
+        return <span className="text-[#F07178]">{result.message}</span>;
+      }
+      
+      return ''; // Success, no output
 
     case 'ls':
-      const currentDir = getCurrentDirectory();
-      const items = Object.values(currentDir)
+      let targetDir;
+      
+      if (args.length === 0) {
+        // ls with no args - list current directory
+        targetDir = getCurrentDirectory();
+      } else {
+        // ls <directory> - list specific directory
+        let dirName = args[0];
+        
+        // Remove trailing slash if present
+        dirName = dirName.endsWith('/') ? dirName.slice(0, -1) : dirName;
+        
+        const target = getFileFromPath(dirName);
+        
+        if (!target) {
+          return <span className="text-[#F07178]">ls: cannot access '{dirName}': No such file or directory</span>;
+        }
+        
+        if (target.type !== 'directory') {
+          return <span className="text-[#F07178]">ls: {dirName}: Not a directory</span>;
+        }
+        
+        targetDir = target.children || {};
+      }
+      
+      const items = Object.values(targetDir)
         .map(item => {
           const icon = item.type === 'directory' ? '📁' : '📄';
           const color = item.type === 'directory' ? 'text-[#C2D94C]' : 'text-[#B3B1AD]';
@@ -45,18 +74,44 @@ Use 'cat <filename>' to read file contents.`;
         return <span className="text-[#F07178]">cat: missing file operand</span>;
       }
       
-      const fileName = args[0];
-      const file = fileSystem[fileName];
+      const filePath = args[0];
+      
+      // Check if path contains / (e.g., projects/t-learn.txt)
+      let file;
+      if (filePath.includes('/')) {
+        const result = resolveFilePath(filePath);
+        if (result.error) {
+          return <span className="text-[#F07178]">cat: {result.error}</span>;
+        }
+        file = result.node;
+      } else {
+        // Simple filename in current directory
+        file = getFileFromPath(filePath);
+        if (!file) {
+          return <span className="text-[#F07178]">cat: {filePath}: No such file or directory</span>;
+        }
+      }
       
       if (!file) {
-        return <span className="text-[#F07178]">cat: {fileName}: No such file or directory</span>;
+        return <span className="text-[#F07178]">cat: {filePath}: No such file or directory</span>;
       }
       
       if (file.type === 'directory') {
-        return <span className="text-[#F07178]">cat: {fileName}: Is a directory</span>;
+        return <span className="text-[#F07178]">cat: {filePath}: Is a directory</span>;
       }
       
-      return file.content || 'File is empty';
+      // Render content with HTML if it contains HTML tags
+      const content = file.content || 'File is empty';
+      if (content.includes('<a ')) {
+        return <div dangerouslySetInnerHTML={{ __html: content }} />;
+      }
+      
+      return content;
+
+    case 'cv':
+    case 'resume':
+      // Trigger CV download
+      return 'DOWNLOAD_CV';
 
     case 'echo':
       if (args.length === 0) {
