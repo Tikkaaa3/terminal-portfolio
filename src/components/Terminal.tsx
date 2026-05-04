@@ -11,63 +11,67 @@ const Terminal: React.FC = () => {
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState<number>(-1);
   const [showHelp, setShowHelp] = useState(true);
-  const [srAnnouncement, setSrAnnouncement] = useState<string>('');
+  const [srAnnouncement, setSrAnnouncement] = useState<string>("");
   const [isBooting, setIsBooting] = useState(true);
   const [bootMessages, setBootMessages] = useState<string[]>([]);
   const [typingEntryIndex, setTypingEntryIndex] = useState<number | null>(null);
-  const [currentTypeText, setCurrentTypeText] = useState('');
+  const [currentTypeText, setCurrentTypeText] = useState("");
 
   const announceToScreenReader = (message: string) => {
     setSrAnnouncement(message);
     // Clear after a short delay to avoid clutter
-    setTimeout(() => setSrAnnouncement(''), 1000);
+    setTimeout(() => setSrAnnouncement(""), 1000);
   };
 
   const bootSequence = async () => {
     const messages = [
-      'Initializing terminal environment...',
-      'Loading portfolio data...',
-      'Establishing secure connection...',
-      'Mounting file system...',
-      '✓ System ready',
-      '',
-      '╔══════════════════════════════════════════════════════════════╗',
-      '║                 Welcome to Emre\'s Terminal Portfolio         ║',
-      '║                      Backend Developer                       ║',
-      '╚══════════════════════════════════════════════════════════════╝',
-      '',
+      "Initializing terminal environment...",
+      "Loading portfolio data...",
+      "Establishing secure connection...",
+      "Mounting file system...",
+      "✓ System ready",
+      "",
+      "╔══════════════════════════════════════════════════════════════╗",
+      "║                 Welcome to Emre's Terminal Portfolio         ║",
+      "║                      Backend Developer                       ║",
+      "╚══════════════════════════════════════════════════════════════╝",
+      "",
       'Type "help" to see available commands.',
       'Type "ls" to explore the file system.',
       'Type "cat about" to learn more about me.',
-      '',
+      "",
     ];
 
     for (let i = 0; i < messages.length; i++) {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      setBootMessages(prev => [...prev, messages[i]]);
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      setBootMessages((prev) => [...prev, messages[i]]);
     }
-    
-    await new Promise(resolve => setTimeout(resolve, 2800));
+
+    await new Promise((resolve) => setTimeout(resolve, 2800));
     setIsBooting(false);
   };
 
   const typeText = async (text: string, entryIndex: number) => {
-    console.log(`typeText called: length=${text.length}, index=${entryIndex}, text preview="${text.substring(0, 50)}..."`);
-    
-    if (typeof text !== 'string' || text.length < 20) {
+    console.log(
+      `typeText called: length=${text.length}, index=${entryIndex}, text preview="${text.substring(0, 50)}..."`,
+    );
+
+    if (typeof text !== "string" || text.length < 20) {
       console.log(`Animation skipped: text length ${text.length} < 20`);
       return;
     }
 
     console.log(`Starting animation for index ${entryIndex}`);
     setTypingEntryIndex(entryIndex);
-    setCurrentTypeText('');
-    
+    setCurrentTypeText("");
+
     for (let i = 0; i <= text.length; i++) {
-      await new Promise(resolve => setTimeout(resolve, 15 + Math.random() * 8));
+      await new Promise((resolve) =>
+        setTimeout(resolve, 15 + Math.random() * 8),
+      );
       setCurrentTypeText(text.substring(0, i));
     }
-    
+
     // Update the history with final text
     setHistory((prev) => {
       const newHistory = [...prev];
@@ -77,9 +81,9 @@ const Terminal: React.FC = () => {
       }
       return newHistory;
     });
-    
+
     setTypingEntryIndex(null);
-    setCurrentTypeText('');
+    setCurrentTypeText("");
   };
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -132,32 +136,37 @@ const Terminal: React.FC = () => {
   };
 
   const handleTabCompletion = () => {
-    const parts = currentInput.trim().split(' ');
+    const parts = currentInput.trim().split(" ");
     const command = parts[0];
-    const currentArg = parts[parts.length - 1] || '';
+    const currentArg = parts[parts.length - 1] || "";
 
     // Only autocomplete for commands that take file/directory arguments
-    if (['cat', 'cd', 'ls'].includes(command)) {
+    if (["cat", "cd", "ls"].includes(command)) {
       const currentDir = getCurrentDirectory();
-      const matches = Object.keys(currentDir).filter(name => 
-        name.startsWith(currentArg)
+      const matches = Object.keys(currentDir).filter((name) =>
+        name.startsWith(currentArg),
       );
 
       if (matches.length === 1) {
         // Single match - complete it
         const completed = matches[0];
-        const newInput = parts.slice(0, -1).concat(completed).join(' ');
-        setCurrentInput(command === 'cat' || command === 'ls' ? newInput + ' ' : newInput);
+        const newInput = parts.slice(0, -1).concat(completed).join(" ");
+        setCurrentInput(
+          command === "cat" || command === "ls" ? newInput + " " : newInput,
+        );
       } else if (matches.length > 1) {
         // Multiple matches - show them
-        const matchList = matches.join('   ');
+        const matchList = matches.join("   ");
         const path = getCurrentPath();
-        const promptPath = path.length === 0 ? '~' : `~/${path.join('/')}`;
-        setHistory(prev => [...prev, { 
-          command: currentInput, 
-          output: matchList, 
-          promptPath 
-        }]);
+        const promptPath = path.length === 0 ? "~" : `~/${path.join("/")}`;
+        setHistory((prev) => [
+          ...prev,
+          {
+            command: currentInput,
+            output: matchList,
+            promptPath,
+          },
+        ]);
       }
     }
   };
@@ -168,7 +177,7 @@ const Terminal: React.FC = () => {
       handleTabCompletion();
       return;
     }
-    
+
     if (e.key === "Enter") {
       e.preventDefault();
       const command = currentInput.trim();
@@ -202,11 +211,11 @@ const Terminal: React.FC = () => {
       } else {
         // Add entry to history first using captured promptPath
         setHistory((prev) => {
-          const newHistory = [...prev, { command, output: '', promptPath }];
+          const newHistory = [...prev, { command, output: "", promptPath }];
           const newEntryIndex = newHistory.length - 1; // Get the correct index
-          
+
           // Check if we should animate (lowered threshold for shorter content)
-          if (typeof output === 'string' && output.length > 20) {
+          if (typeof output === "string" && output.length > 20) {
             // Start typing animation with correct index
             setTimeout(() => {
               typeText(output, newEntryIndex);
@@ -221,13 +230,15 @@ const Terminal: React.FC = () => {
               });
             }, 0);
           }
-          
+
           return newHistory;
         });
 
         // Announce command result to screen readers
-        if (typeof output === 'string') {
-          announceToScreenReader(`Command ${command} executed. Output: ${output.substring(0, 100)}...`);
+        if (typeof output === "string") {
+          announceToScreenReader(
+            `Command ${command} executed. Output: ${output.substring(0, 100)}...`,
+          );
         }
       }
 
@@ -286,12 +297,14 @@ const Terminal: React.FC = () => {
     <div className="terminal-container relative h-screen w-full bg-[#0A0E14]">
       {/* CRT Effect Overlay */}
       <div className="crt-overlay"></div>
-      
+
       {/* Help Panel - only show if not booting */}
       {showHelp && !isBooting && (
         <div className="fixed top-4 right-4 bg-[#0F1419] border-2 border-[#FFB454] rounded-lg p-3 md:p-6 shadow-2xl z-50 w-72 md:w-96 max-w-[90vw]">
           <div className="flex justify-between items-center mb-3 md:mb-4">
-            <h3 className="text-[#FFB454] font-bold text-lg md:text-xl">📚 Quick Help</h3>
+            <h3 className="text-[#FFB454] font-bold text-lg md:text-xl">
+              📚 Quick Help
+            </h3>
             <button
               onClick={() => setShowHelp(false)}
               className="text-[#F07178] hover:text-[#FF3333] font-bold text-xl"
@@ -332,16 +345,18 @@ const Terminal: React.FC = () => {
               <span className="text-[#C2D94C] font-semibold">pwd</span> - Show
               current path
             </div>
+            <div className="text-sm md:text-base">
+              <br />
+              <span className="text-[#C2D94C]">
+                Use tab to auto complete file names
+              </span>
+            </div>
           </div>
         </div>
       )}
 
       {/* Screen Reader Announcements */}
-      <div 
-        aria-live="polite" 
-        aria-atomic="true"
-        className="sr-only"
-      >
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
         {srAnnouncement}
       </div>
 
@@ -352,8 +367,8 @@ const Terminal: React.FC = () => {
         role="application"
         aria-label="Interactive terminal portfolio"
         style={{
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
         }}
       >
         {/* Hide scrollbar for webkit browsers */}
@@ -413,7 +428,8 @@ const Terminal: React.FC = () => {
                         {currentTypeText}
                         <span className="typing-cursor">█</span>
                       </>
-                    ) : typeof entry.output === 'string' && entry.output.includes('<a ') ? (
+                    ) : typeof entry.output === "string" &&
+                      entry.output.includes("<a ") ? (
                       <div dangerouslySetInnerHTML={{ __html: entry.output }} />
                     ) : (
                       entry.output
@@ -422,7 +438,6 @@ const Terminal: React.FC = () => {
                 )}
               </div>
             ))}
-
 
             {/* Current Input Line */}
             <div className="flex">
@@ -436,9 +451,9 @@ const Terminal: React.FC = () => {
                   onKeyDown={handleKeyDown}
                   className="bg-transparent border-none outline-none text-[#B3B1AD] font-mono caret-transparent w-full"
                   style={{
-                    fontSize: 'inherit',
-                    fontFamily: 'inherit',
-                    lineHeight: 'inherit',
+                    fontSize: "inherit",
+                    fontFamily: "inherit",
+                    lineHeight: "inherit",
                     padding: 0,
                     margin: 0,
                   }}
@@ -449,7 +464,7 @@ const Terminal: React.FC = () => {
                   aria-label="Terminal command input"
                 />
                 {showCursor && (
-                  <span 
+                  <span
                     className="bg-[#B3B1AD] text-[#0A0E14] absolute pointer-events-none cursor-blink"
                     style={{
                       left: `${currentInput.length}ch`,
