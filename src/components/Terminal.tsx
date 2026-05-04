@@ -16,6 +16,7 @@ const Terminal: React.FC = () => {
   const [bootMessages, setBootMessages] = useState<string[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [currentTypeText, setCurrentTypeText] = useState('');
+  const [debugInfo, setDebugInfo] = useState('');
 
   const announceToScreenReader = (message: string) => {
     setSrAnnouncement(message);
@@ -51,28 +52,19 @@ const Terminal: React.FC = () => {
     setIsBooting(false);
   };
 
-  const typeText = async (text: string, historyIndex: number) => {
-    if (typeof text !== 'string' || text.length < 50) return;
-    
+  const typeText = async (text: string) => {
+    if (typeof text !== 'string' || text.length < 30) return text; // Lower threshold
+
     setIsTyping(true);
     setCurrentTypeText('');
     
     for (let i = 0; i <= text.length; i++) {
-      await new Promise(resolve => setTimeout(resolve, Math.random() * 30 + 10));
+      await new Promise(resolve => setTimeout(resolve, Math.random() * 40 + 15)); // Slightly slower
       setCurrentTypeText(text.substring(0, i));
     }
     
-    // Update the history with the final text BEFORE setting isTyping to false
-    setHistory((prev) => {
-      const newHistory = [...prev];
-      if (newHistory[historyIndex]) {
-        newHistory[historyIndex].output = text;
-      }
-      return newHistory;
-    });
-    
     setIsTyping(false);
-    setCurrentTypeText('');
+    return text;
   };
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -187,23 +179,35 @@ const Terminal: React.FC = () => {
           { command, output: "Downloading CV...", promptPath },
         ]);
       } else {
+        const path = getCurrentPath();
+        const promptPath = path.length === 0 ? "~" : `~/${path.join("/")}`;
+  
         // Show typing animation for string outputs
-        if (typeof output === 'string' && output.length > 50) {
-          // Add entry to history first and get the correct index
+        if (typeof output === 'string' && output.length > 30) {
+          setDebugInfo(`Starting animation for ${output.length} chars`); // Debug
+    
+          // First show the command in history with empty output
+          setHistory((prev) => [...prev, { command, output: '', promptPath }]);
+    
+          // Type the output
+          const typedOutput = await typeText(output);
+    
+          setDebugInfo(`Animation completed`); // Debug
+    
+          // Update the last entry with the complete output
           setHistory((prev) => {
-            const newHistory = [...prev, { command, output: '', promptPath }];
-            // Start typing animation with the correct index (length of new array - 1)
-            const newIndex = newHistory.length - 1;
-            // Use setTimeout to ensure the state update happens first
-            setTimeout(() => {
-              typeText(output, newIndex);
-            }, 0);
+            const newHistory = [...prev];
+            newHistory[newHistory.length - 1].output = typedOutput;
             return newHistory;
           });
+    
+          setTimeout(() => setDebugInfo(''), 2000); // Clear debug after 2s
         } else {
+          setDebugInfo(`No animation - output length: ${typeof output === 'string' ? output.length : 'not string'}`); // Debug
           setHistory((prev) => [...prev, { command, output, promptPath }]);
+          setTimeout(() => setDebugInfo(''), 2000); // Clear debug after 2s
         }
-        
+
         // Announce command result to screen readers
         if (typeof output === 'string') {
           announceToScreenReader(`Command ${command} executed. Output: ${output.substring(0, 100)}...`);
@@ -387,7 +391,7 @@ const Terminal: React.FC = () => {
                 )}
                 {entry.output && (
                   <div className="terminal-output whitespace-pre-wrap break-words mb-2">
-                    {isTyping && index === history.length - 1 ? (
+                    {isTyping && index === history.length - 1 && !entry.output ? (
                       <>
                         {currentTypeText}
                         <span className="typing-cursor">█</span>
@@ -399,6 +403,13 @@ const Terminal: React.FC = () => {
                 )}
               </div>
             ))}
+
+            {/* Temporary debug info */}
+            {debugInfo && (
+              <div className="text-yellow-400 text-xs">
+                DEBUG: {debugInfo}
+              </div>
+            )}
 
             {/* Current Input Line */}
             <div className="flex">
