@@ -47,7 +47,7 @@ const Terminal: React.FC = () => {
       setBootMessages(prev => [...prev, messages[i]]);
     }
     
-    await new Promise(resolve => setTimeout(resolve, 800));
+    await new Promise(resolve => setTimeout(resolve, 2800));
     setIsBooting(false);
   };
 
@@ -110,6 +110,12 @@ const Terminal: React.FC = () => {
   useEffect(() => {
     bootSequence();
   }, []);
+
+  useEffect(() => {
+    if (!isBooting && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isBooting]);
 
   const handleTerminalClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -283,9 +289,9 @@ const Terminal: React.FC = () => {
       
       {/* Help Panel - only show if not booting */}
       {showHelp && !isBooting && (
-        <div className="fixed top-4 right-4 bg-[#0F1419] border-2 border-[#FFB454] rounded-lg p-4 md:p-6 shadow-2xl z-50 w-80 md:w-96 max-w-[90vw]">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-[#FFB454] font-bold text-xl">📚 Quick Help</h3>
+        <div className="fixed top-4 right-4 bg-[#0F1419] border-2 border-[#FFB454] rounded-lg p-3 md:p-6 shadow-2xl z-50 w-72 md:w-96 max-w-[90vw]">
+          <div className="flex justify-between items-center mb-3 md:mb-4">
+            <h3 className="text-[#FFB454] font-bold text-lg md:text-xl">📚 Quick Help</h3>
             <button
               onClick={() => setShowHelp(false)}
               className="text-[#F07178] hover:text-[#FF3333] font-bold text-xl"
@@ -293,36 +299,36 @@ const Terminal: React.FC = () => {
               ✕
             </button>
           </div>
-          <div className="text-[#B3B1AD] space-y-3">
-            <div className="text-base">
+          <div className="text-[#B3B1AD] space-y-2 md:space-y-3">
+            <div className="text-sm md:text-base">
               <span className="text-[#C2D94C] font-semibold">help</span> -
               Toggle ON/OFF help panel
             </div>
-            <div className="text-base">
+            <div className="text-sm md:text-base">
               <span className="text-[#C2D94C] font-semibold">ls [dir]</span> -
               List files & directories
             </div>
-            <div className="text-base">
+            <div className="text-sm md:text-base">
               <span className="text-[#C2D94C] font-semibold">
                 cd &lt;dir&gt;
               </span>{" "}
               - Change directory
             </div>
-            <div className="text-base">
+            <div className="text-sm md:text-base">
               <span className="text-[#C2D94C] font-semibold">
                 cat &lt;file&gt;
               </span>{" "}
               - View file contents
             </div>
-            <div className="text-base">
+            <div className="text-sm md:text-base">
               <span className="text-[#C2D94C] font-semibold">cv</span> -
               Download resume PDF
             </div>
-            <div className="text-base">
+            <div className="text-sm md:text-base">
               <span className="text-[#C2D94C] font-semibold">clear</span> -
               Clear terminal
             </div>
-            <div className="text-base">
+            <div className="text-sm md:text-base">
               <span className="text-[#C2D94C] font-semibold">pwd</span> - Show
               current path
             </div>
