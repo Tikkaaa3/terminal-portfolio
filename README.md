@@ -1,5 +1,22 @@
 # emretolgakaptan.dev — Interactive Terminal Portfolio
 
+<p align="center">
+
+![Astro](https://img.shields.io/badge/Astro-Framework-FF5D01?style=for-the-badge&logo=astro)
+![React](https://img.shields.io/badge/React-UI-61DAFB?style=for-the-badge&logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-Strong-3178C6?style=for-the-badge&logo=typescript)
+![TailwindCSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC?style=for-the-badge&logo=tailwindcss)
+
+![AI Assisted](https://img.shields.io/badge/AI--Augmented-Workflow-purple?style=for-the-badge)
+![Aider](https://img.shields.io/badge/Aider-Pair%20Programming-0EA5E9?style=for-the-badge)
+![OpenRouter](https://img.shields.io/badge/OpenRouter-Model%20Routing-orange?style=for-the-badge)
+![Graphify](https://img.shields.io/badge/Graphify-Architecture%20Graph-green?style=for-the-badge)
+
+![Terminal UI](https://img.shields.io/badge/UX-Terminal%20Interface-black?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Live-success?style=for-the-badge)
+
+</p>
+
 A browser-based terminal portfolio built with Astro + React. No generic templates—just a custom fake filesystem, CRT effects, and keyboard navigation.
 
 Built using an **AI-augmented workflow** to accelerate development, leveraging agentic coding tools alongside traditional development practices.
